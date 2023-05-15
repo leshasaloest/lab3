@@ -24,15 +24,16 @@ class Kupyna:
             raise Exception('Unsupported hash length')
 
     def preprocess(self, message):
+        # binary_message = bin(int.from_bytes(message.encode('utf-16', 'surrogatepass'), 'big'))[2:]
+        # binary_message = binary_message.zfill(8*((len(binary_message)+7)//8))
         binary_message = ''.join(format(ord(x), 'b') for x in message)
-
+        #binary_message = ''
         N = len(binary_message)
         k = (-97 - N) % self.n_bytes
         binary_N = ''
         for i in range(12):
             binary_N += bin((N >> i * 8) & 0xff)[2:].zfill(8)
         padded_message = binary_message + '1' + '0' * k + binary_N
-
         states = []
         for b in range(len(padded_message) // self.n_bytes):
             bits = padded_message[b * self.n_bytes:(b + 1) * self.n_bytes]
@@ -148,4 +149,4 @@ class Kupyna:
 
 
 if __name__ == '__main__':
-    print(len(Kupyna(512).hash("""З'їв аґрусу — та ягода цілюща б'є жах інфекцій шипучим "ь".""")))
+    print(Kupyna(512).hash(""))
